@@ -15,4 +15,5 @@
 
 ## Демо-доступ
 - Администратор: admin/admin123
-- Пользователь: user/user123 
+- Пользователь: user/user123
+- https://warlak4.github.io/vkusnyashka/
