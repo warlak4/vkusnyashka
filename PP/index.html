@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Кондитерская «Вкусняшка»</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .header-actions {
+      position: fixed;
+      top: 24px;
+      right: 40px;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+    }
+    .cart-icon {
+      position: relative;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+      background: #fff;
+      box-shadow: 0 2px 8px #ffe6fa;
+      font-size: 1.3em;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .cart-icon:hover {
+      background: #fff5f9;
+    }
+    .cart-count {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: #e75480;
+      color: white;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8em;
+      font-weight: bold;
+    }
+    .user-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #fff5f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 2px solid #ffb6e6;
+    }
+    .user-avatar:hover {
+      box-shadow: 0 4px 8px rgba(231, 84, 128, 0.2);
+    }
+    .user-avatar img {
+      width: 24px;
+      height: 24px;
+    }
+    .nav-btn {
+      background: #e75480;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.7rem 1.2rem;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .nav-btn:hover {
+      background: #d13d6a;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="site-header">
+      <div class="logo">
+        <!-- SVG-логотип -->
+        <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="30" cy="30" r="28" fill="#fff5f9" stroke="#e75480" stroke-width="3"/>
+          <ellipse cx="30" cy="38" rx="18" ry="10" fill="#ffe0ef" stroke="#e75480" stroke-width="2"/>
+          <ellipse cx="30" cy="28" rx="12" ry="7" fill="#fff" stroke="#e75480" stroke-width="2"/>
+          <ellipse cx="30" cy="22" rx="6" ry="3.5" fill="#e75480"/>
+          <circle cx="30" cy="18" r="2" fill="#fff"/>
+          <text x="30" y="54" text-anchor="middle" font-size="12" fill="#e75480" font-family="Arial" font-weight="bold">VK</text>
+        </svg>
+        <span class="logo-title">Вкусняшка</span>
+      </div>
+    </header>
+
+    <div id="app">
+      <ul class="category-list">
+        <li class="category-card">
+          <span class="cat-ico">🍰</span>
+          <span>Торты</span>
+        </li>
+        <!-- ... -->
+      </ul>
+    </div>
+  </div>
+  <div id="modal-root"></div>
+  <div class="header-actions" id="header-actions-root"></div>
+  <script src="app.js"></script>
+  <script>
+    // Карусель акций
+    const promoSlides = document.querySelectorAll('.promo-slide');
+    const promoTrack = document.querySelector('.promo-track');
+    let promoIndex = 0;
+    function showPromoSlide(index) {
+      promoTrack.style.transform = `translateX(${-index * 220}px)`;
+    }
+    document.querySelector('.promo-prev').onclick = () => {
+      promoIndex = (promoIndex - 1 + promoSlides.length) % promoSlides.length;
+      showPromoSlide(promoIndex);
+    };
+    document.querySelector('.promo-next').onclick = () => {
+      promoIndex = (promoIndex + 1) % promoSlides.length;
+      showPromoSlide(promoIndex);
+    };
+    showPromoSlide(0);
+
+    function renderHeaderActions() {
+      const user = (typeof getCurrentUser === 'function') ? getCurrentUser() : null;
+      const cart = window.cart || [];
+      document.getElementById('header-actions-root').innerHTML = `
+        <div class="cart-icon" onclick="renderCart()">
+          🛒
+          ${cart.length ? `<span class=\"cart-count\">${cart.length}</span>` : ''}
+        </div>
+        ${user ?
+          `<div class=\"user-avatar\" onclick=\"showProfileModal()\">
+            <img src=\"user-avatar.png\" alt=\"Профиль\">
+          </div>` :
+          `<button class=\"nav-btn\" onclick=\"showLoginModal()\">Войти</button>`
+        }
+      `;
+    }
+    // После загрузки страницы и после каждого изменения корзины/авторизации вызывать renderHeaderActions()
+    document.addEventListener('DOMContentLoaded', function() {
+      if (typeof renderHeaderActions === 'function') renderHeaderActions();
+    });
+  </script>
+</body>
+</html> 
